@@ -2,7 +2,7 @@ services:
   mariadb:
     build:
       context: requirements/mariadb
-    image: mariadb
+    image: mariadb:1.0
     container_name: mariadb
     networks:
       - inception-network
@@ -14,12 +14,12 @@ services:
     secrets:
       - db_root_password
       - db_password
-    restart: always
+    restart: on-failure
 
   wordpress:
     build:
       context: requirements/wordpress
-    image: wordpress
+    image: wordpress:1.0
     container_name: wordpress
     depends_on:
       - mariadb
@@ -39,12 +39,12 @@ services:
       - db_password
       - wp_admin_password
       - wp_user_password
-    restart: always
+    restart: on-failure
 
   nginx:
     build:
       context: requirements/nginx
-    image: nginx
+    image: nginx:1.0
     container_name: nginx
     depends_on:
       - wordpress
@@ -56,7 +56,7 @@ services:
       - wordpress_data:/var/www/html
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME}
-    restart: always
+    restart: on-failure
 
 networks:
   inception-network:
